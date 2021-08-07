@@ -1,6 +1,12 @@
 # Compilation files
 *.hi
 *.o
+*.out
 
 # Temp files
 *.swp
+
+# Unnecessary folders / files
+in
+out
+bin/
