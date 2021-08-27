@@ -102,9 +102,6 @@ numBorrowed db key
     | fst (head db) == key = 1 + numBorrowed (tail db) key
     | otherwise = numBorrowed (tail db) key
 
-numBorrowed :: Database -> Person -> Int
-numBorrowed db person = length 
-
 -- make loan
 makeLoan :: Database -> Person -> Book -> Database
 makeLoan db p b = (p, b):db
@@ -125,4 +122,71 @@ returnLoanPattern ((person, book):db) p b
 returnLoanComprehension :: Database -> Person -> Book -> Database
 returnLoanComprehension db p b = [(person, book) | (person, book) <- db, (person, book) /= (p, b)]
 
+-- Exercicio maxFun
+sales :: Int -> Int
+sales n = n * 10
+
+-- maxFun :: (Int -> Int) -> Int -> Int -> Int
+-- maxFun f 0 = f 0
+-- maxFun f n = maxi (maxFun f (n-1)) (f n)
+
+-- maxSales :: Int -> Int
+-- maxSales 0 = sales 0
+-- maxSales n = maxi (maxSales (n-1)) sales n
+
+-- Exercicio isCrescent
+
+f :: Int -> Int
+f x = (x*x)*(-1)
+
+isCrescent :: (Int -> Int) -> Int -> Bool
+isCrescent f 0 = True
+isCrescent f x = (f x) >= (f (x-1)) && isCrescent f (x-1)
+
 -- Exercicio implementar soma de matrizes
+
+sumPair :: (Int, Int) -> Int
+sumPair (x, y) = x + y
+
+matrixSum :: [[Int]] -> [[Int]] -> [[Int]]
+matrixSum [] [] = []
+matrixSum (a:as) (b:bs) = map sumPair (zip a b):matrixSum as bs
+
+--Multiplicacao de matrizes
+
+transpose :: [[Int]] -> [[Int]]
+transpose ([]:_) = []
+transpose a = (map head a) : transpose (map tail a)
+
+linearComb :: [Int] -> [[Int]] -> [Int]
+linearComb a [] = []
+linearComb a (b:bs) = foldr (+) 0 (zipWith (*) a b) : linearComb a bs
+
+matrixMult :: [[Int]] -> [[Int]] -> [[Int]]
+matrixMult [] b = []
+matrixMult (a:as) b = (linearComb a (transpose b)) : matrixMult as b
+
+-- Interseção
+find :: Int -> [Int] -> Bool
+find a [] = False
+find a (b:bs) = (a == b) || find a bs
+
+intersection :: [Int] -> [Int] -> [Int]
+intersection a b = [x | x <- a, find x b]
+
+-- Uniao com repeticao
+union :: [Int] -> [Int] -> [Int]
+union a b = a ++ b
+
+-- Uniao sem repeticao
+remove :: Int -> [Int] -> [Int]
+remove n l = [e | e <- l, e /= n]
+
+unique :: [Int] -> [Int] -> [Int]
+unique [] [] = []
+unique [] b = b
+unique (a:as) [] = unique as (a:remove a as)
+unique (a:as) b = unique as (a:remove a (union b as))
+
+unionNoRep :: [Int] -> [Int] -> [Int]
+unionNoRep a b = unique (union a b) []
